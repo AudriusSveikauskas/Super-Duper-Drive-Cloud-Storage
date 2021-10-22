@@ -38,7 +38,7 @@ public class UserTest {
         signupPage.setSignupPagePassword("qwerty");
         signupPage.clickSignupPageSignupButton();
         webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        Assertions.assertEquals("You successfully signed up! Please continue to the login page.", webDriver.findElement(By.id("successSignupMessage")).getText());
+        Assertions.assertEquals("You successfully signed up! You will be redirected to the login page in five seconds.", webDriver.findElement(By.id("successSignupMessage")).getText());
         signupPage.clickBackToLoginButton();
     }
 
