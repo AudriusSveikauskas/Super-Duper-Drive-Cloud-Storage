@@ -26,21 +26,28 @@ public class NoteController {
     public String note(Authentication authentication,
                        @ModelAttribute("newNote") NewNote newNote,
                        Model model) {
-        if (newNote.getNoteId().isEmpty()) {
+        Integer userId = getUserId(authentication);
+        Note[] allNotes = noteService.getAllNotesByUserId(userId);
+        if (noteTitleIsDuplicate(allNotes, newNote.getTitle())) {
+            model.addAttribute("status", "error");
+            model.addAttribute("message", "Note already available.");
+        }
+        else if (newNote.getNoteId().isEmpty()) {
             noteService.addNewNote(
                     newNote.getTitle(),
                     newNote.getDescription(),
                     authentication.getName());
+            model.addAttribute("getAllNotes", noteService.getAllNotesByUserId(userId));
+            model.addAttribute("status", "success");
         } else {
             Note note = getNoteById(Integer.parseInt(newNote.getNoteId()));
             noteService.updateNoteById(
                     note.getNoteId(),
                     newNote.getTitle(),
                     newNote.getDescription());
+            model.addAttribute("getAllNotes", noteService.getAllNotesByUserId(userId));
+            model.addAttribute("status", "success");
         }
-        Integer userId = getUserId(authentication);
-        model.addAttribute("getAllNotes", noteService.getAllNotesByUserId(userId));
-        model.addAttribute("status", "success");
         return "result";
     }
 
@@ -63,6 +70,15 @@ public class NoteController {
     private Integer getUserId(Authentication authentication) {
         User user = userService.getUser(authentication.getName());
         return user.getUserId();
+    }
+
+    public boolean noteTitleIsDuplicate(Note[] allNotes, String newNoteTitle) {
+        for (Note note : allNotes) {
+            if (note.getNoteTitle().equals(newNoteTitle)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

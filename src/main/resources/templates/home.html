@@ -3,8 +3,18 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+        <script>
+            $(document).ready(function () {
+                $("#fileUpload").on('change',function(event){
+                    filename=$(this).val();
+                    if(filename!==''){
+                        $("#uploadButton").prop('disabled', false);
+                    }
+                })
+            });
+        </script>
 
         <title>Home</title>
     </head>
@@ -47,7 +57,10 @@
                                                th:field="*{multipartFile}">
                                     </div>
                                     <div class="col-sm-4">
-                                        <button type="submit" class="btn btn-dark">Upload</button>
+                                        <button type="submit"
+                                                class="btn btn-dark"
+                                                id="uploadButton"
+                                                disabled>Upload</button>
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +244,7 @@
                                                    id="credential-id"
                                                    th:field="*{credentialId}">
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">URL</label>
+                                                <label for="credential-url" class="col-form-label">URL</label>
                                                 <input type="text"
                                                        name= "url"
                                                        class="form-control"
@@ -241,7 +254,7 @@
                                                        th:field="*{url}">
                                             </div>
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">Username</label>
+                                                <label for="credential-username" class="col-form-label">Username</label>
                                                 <input type="text"
                                                        name= "username"
                                                        class="form-control"
@@ -251,7 +264,7 @@
                                                        th:field="*{userName}">
                                             </div>
                                             <div class="form-group">
-                                                <label for="note-title" class="col-form-label">Password</label>
+                                                <label for="credential-password" class="col-form-label">Password</label>
                                                 <input type="text"
                                                        name= "password"
                                                        class="form-control"

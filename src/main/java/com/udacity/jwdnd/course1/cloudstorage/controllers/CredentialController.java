@@ -36,13 +36,22 @@ public class CredentialController {
         SecureRandom secureRandom = new SecureRandom();
         byte[] key = new byte[16];
         secureRandom.nextBytes(key);
-        if (newCredential.getCredentialId().isEmpty()) {
+        Integer userId = getUserId(authentication);
+        Credential[] allCredentials = credentialService.getAllCredentialsByUserId(userId);
+        if (credentialUsernameIsDuplicate(allCredentials, newCredential.getUserName())) {
+            model.addAttribute("status", "error");
+            model.addAttribute("message", "User already available.");
+        }
+        else if (newCredential.getCredentialId().isEmpty()) {
             credentialService.addNewCredential(
                     newCredential.getUrl(),
                     authentication.getName(),
                     newCredential.getUserName(),
                     Base64.getEncoder().encodeToString(key),
                     encryptionService.encryptValue(newCredential.getPassword(), Base64.getEncoder().encodeToString(key)));
+            model.addAttribute("encryptionService", encryptionService);
+            model.addAttribute("getAllCredential", credentialService.getAllCredentialsByUserId(userId));
+            model.addAttribute("status", "success");
         } else {
             Credential credential = getCredentialById(Integer.parseInt(newCredential.getCredentialId()));
             credentialService.updateCredentialById(
@@ -51,11 +60,10 @@ public class CredentialController {
                     newCredential.getUrl(),
                     Base64.getEncoder().encodeToString(key),
                     encryptionService.encryptValue(newCredential.getPassword(), Base64.getEncoder().encodeToString(key)));
+            model.addAttribute("encryptionService", encryptionService);
+            model.addAttribute("getAllCredential", credentialService.getAllCredentialsByUserId(userId));
+            model.addAttribute("status", "success");
         }
-        Integer userId = getUserId(authentication);
-        model.addAttribute("encryptionService", encryptionService);
-        model.addAttribute("getAllCredential", credentialService.getAllCredentialsByUserId(userId));
-        model.addAttribute("status", "success");
         return ("result");
     }
 
@@ -78,6 +86,15 @@ public class CredentialController {
     private Integer getUserId(Authentication authentication) {
         User user = userService.getUser(authentication.getName());
         return user.getUserId();
+    }
+
+    public boolean credentialUsernameIsDuplicate(Credential[] allCredentials, String newCredentialUsername) {
+        for (Credential credential : allCredentials) {
+            if (credential.getUsername().equals(newCredentialUsername)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

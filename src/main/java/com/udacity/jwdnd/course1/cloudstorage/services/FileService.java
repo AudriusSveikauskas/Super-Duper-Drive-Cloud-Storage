@@ -32,9 +32,10 @@ public class FileService {
     public void uploadFile(MultipartFile multipartFile, String userName) throws IOException {
         InputStream inputStream = multipartFile.getInputStream();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] data = new byte[2048];
-        while (inputStream.read(data, 0, data.length) != -1) {
-            byteArrayOutputStream.write(data, 0, inputStream.read(data, 0, data.length));
+        byte[] data = new byte[1024];
+        int nRead;
+        while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+            byteArrayOutputStream.write(data, 0, nRead);
         }
 
         byteArrayOutputStream.flush();

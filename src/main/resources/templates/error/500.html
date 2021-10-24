@@ -13,16 +13,16 @@
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
-    <title>Result</title>
+    <title th:text="${status} + ' - '+ ${error}">500</title>
 </head>
 <body class="p-3 mb-2 bg-light text-black">
 <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
     <div class="alert alert-danger fill-parent"
          th:if="${'error'}">
         <h1 class="display-5" th:text="'Error Info: ' + ${error} + ' / Status: ' + ${status}">Error</h1>
-        <span>You will be redirected to the <a th:href="@{/home}">home</a> page in three seconds.
-        <meta http-equiv="refresh" content="3; url='/home'" /></span>
-        <iframe src="https://giphy.com/embed/WRQHNUkfEJ8dHCzz9I" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/afassoftware-error-whoops-404-WRQHNUkfEJ8dHCzz9I">via GIPHY</a></p>
+        <span>You will be redirected to the <a th:href="@{/home}">home</a> page in five seconds.
+        <meta http-equiv="refresh" content="5; url='/home'" /></span>
+        <iframe src="https://giphy.com/embed/kcymXcTHzbOssPw0wl" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/facepalm-terrygregory-terry-gregory-kcymXcTHzbOssPw0wl">via GIPHY</a></p>
     </div>
 </div>
 </body>
